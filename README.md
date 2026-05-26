@@ -54,3 +54,65 @@ diffusers
 transformers
 accelerate
 ```
+> BiSeNet and MediaPipe model weights download automatically on first run (~50MB and ~6MB respectively). You can also remove the [gpu] in rembg
+
+## Input Format
+ 
+SubZero is designed for **pre-keyed footage** — export your subject with alpha from DaVinci Resolve, Nuke, or After Effects before running.
+ 
+| Input | Quality | Notes |
+|-------|---------|-------|
+| PNG sequence with alpha | ✓ Best | Use Magic Mask, Delta Key, or rotoscope in Resolve |
+| EXR sequence with alpha | ✓ Best | Preferred for linear-gamma VFX pipelines |
+| MP4 / MOV | ⚠ Fallback | rembg used for background removal — lower quality around hair |
+ 
+**Recommended Resolve export:** File → Export → Individual Clips → PNG, enable Export Alpha.
+ 
+---
+## Usage
+ 
+```bash
+# Full quality
+python subzero_normals.py "./frames_folder" "./output_normals"
+ 
+# Fast preview
+python subzero_normals.py "./frames_folder" "./output_normals" --preview
+```
+ 
+### Quality flags
+| Flag | Default | Preview |
+|------|---------|---------|
+| `--steps` | 10 | 4 |
+| `--ensemble` | 12 | 4 |
+| `--res` | 1024 | 512 |
+| `--no-temporal` | — | disables temporal smoothing |
+ 
+---
+## Output
+ 
+```
+output_normals/
+  normal_0001.png   # RGBA — normal map with alpha carried through
+  normal_0002.png
+  ...
+```
+ 
+All output frames carry the original alpha channel. Import as image sequence in Resolve, Nuke, or After Effects at your source FPS.
+ 
+---
+## Limitations
+ 
+- Optimised for forward-facing subjects. Quality degrades on extreme profile angles — this is a limitation of monocular normal estimation in general, not specific to SubZero.
+- SwitchLight uses proprietary models trained on lightstage capture data. SubZero is a best-effort approximation using open models.
+---
+ 
+## Acknowledgements
+ 
+- [Marigold](https://marigoldmonodepth.github.io/) — Ke et al., CVPR 2024
+- [face-parsing.PyTorch](https://github.com/zllrunning/face-parsing.PyTorch) — BiSeNet face parser
+- [MediaPipe](https://ai.google.dev/edge/mediapipe) — Google
+---
+ 
+## License
+ 
+MIT
