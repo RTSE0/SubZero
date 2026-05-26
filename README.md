@@ -9,5 +9,3 @@ Built as a free alternative to [SwitchLight Studio](https://www.beeble.ai/) afte
 
 Given a keyed portrait video (PNG/EXR sequence with alpha), SubZero extracts:
 - **Normal maps** — surface geometry for relighting in Blender, Nuke, or After Effects
-- **Albedo maps** — diffuse base colour with lighting removed
-- **Residual maps** — specularity hint (bright areas = specular highlights)
